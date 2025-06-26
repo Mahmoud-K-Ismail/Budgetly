@@ -191,7 +191,7 @@ This project is licensed under the MIT License.
 
 For issues and questions:
 - Create an issue on GitHub
-- Contact: [Your Email]
+- Contact: mki4895@nyu.edu
 
 ---
 
