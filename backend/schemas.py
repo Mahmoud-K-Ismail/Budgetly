@@ -24,7 +24,12 @@ class ExpenseBase(BaseModel):
     amount: float = Field(..., gt=0, description="Expense amount")
     category: str = Field(..., min_length=1, max_length=50, description="Expense category")
     description: Optional[str] = Field(None, max_length=500, description="Expense description")
-    expense_date: date = Field(..., description="Date of expense")
+    expense_date: date = Field(..., alias="date", description="Date of expense")
+
+    model_config = {
+        "populate_by_name": True,
+        "extra": "ignore"
+    }
 
 class ExpenseCreate(ExpenseBase):
     user_id: int = Field(..., description="User ID")
