@@ -66,6 +66,23 @@ export default {
           700: '#b91c1c',
           800: '#991b1b',
           900: '#7f1d1d',
+        },
+        brand: {
+          50: '#e6f7ff',
+          100: '#ccf0ff',
+          200: '#99e0ff',
+          300: '#66cfff',
+          400: '#33bfff',
+          500: '#00A2FF',   // light Revolut blue
+          600: '#0075FF',   // primary Revolut blue
+          700: '#0060e0',
+          800: '#0048b3',
+          900: '#003380',
+        },
+        purpleAccent: {
+          500: '#7C4DFF',
+          600: '#6937ff',
+          700: '#582be6',
         }
       },
       fontFamily: {
