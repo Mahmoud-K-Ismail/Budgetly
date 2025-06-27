@@ -235,4 +235,37 @@ async def get_expenses_explicit(
     if end_date:
         query = query.filter(Expense.expense_date <= end_date)
     expenses = query.order_by(Expense.expense_date.desc()).offset(offset).limit(limit).all()
+    return expenses
+
+@router.get("/expenses/categories", response_model=List[str])
+async def get_expense_categories(db: Session = Depends(get_db)):
+    """Return a deduplicated list of existing expense categories. If none exist yet, return common defaults."""
+    categories = db.query(Expense.category).distinct().all()
+    category_list = [c[0] for c in categories]
+    defaults = ["food", "transport", "entertainment", "shopping", "utilities", "health", "education"]
+    for d in defaults:
+        if d not in category_list:
+            category_list.append(d)
+    return category_list
+
+# Support legacy frontend call: /api/expenses/{user_id}
+@router.get("/expenses/{user_id}", response_model=List[ExpenseSchema])
+async def get_user_expenses_legacy(
+    user_id: int,
+    category: Optional[str] = Query(None),
+    start_date: Optional[date] = Query(None),
+    end_date: Optional[date] = Query(None),
+    limit: int = Query(100, le=1000),
+    offset: int = Query(0, ge=0),
+    db: Session = Depends(get_db)
+):
+    """Return expenses for a specific user (legacy path used by frontend)."""
+    query = db.query(Expense).filter(Expense.user_id == user_id)
+    if category:
+        query = query.filter(Expense.category.ilike(f"%{category}%"))
+    if start_date:
+        query = query.filter(Expense.expense_date >= start_date)
+    if end_date:
+        query = query.filter(Expense.expense_date <= end_date)
+    expenses = query.order_by(Expense.expense_date.desc()).offset(offset).limit(limit).all()
     return expenses 
