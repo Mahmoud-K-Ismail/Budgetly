@@ -40,8 +40,8 @@ async def create_expense(expense_data: ExpenseCreate, db: Session = Depends(get_
 async def get_expenses(
     user_id: Optional[int] = Query(None, description="Filter by user ID"),
     category: Optional[str] = Query(None, description="Filter by category"),
-    start_date: Optional[date] = Query(None, description="Filter by start date"),
-    end_date: Optional[date] = Query(None, description="Filter by end date"),
+    start_date: Optional[str] = Query(None),
+    end_date: Optional[str] = Query(None),
     limit: int = Query(100, le=1000, description="Maximum number of expenses to return"),
     offset: int = Query(0, ge=0, description="Number of expenses to skip"),
     db: Session = Depends(get_db)
@@ -59,10 +59,16 @@ async def get_expenses(
         query = query.filter(Expense.category.ilike(f"%{category}%"))
     
     if start_date:
-        query = query.filter(Expense.expense_date >= start_date)
+        try:
+            query = query.filter(Expense.expense_date >= start_date)
+        except Exception:
+            pass
     
     if end_date:
-        query = query.filter(Expense.expense_date <= end_date)
+        try:
+            query = query.filter(Expense.expense_date <= end_date)
+        except Exception:
+            pass
     
     # Apply pagination
     expenses = query.order_by(Expense.expense_date.desc()).offset(offset).limit(limit).all()
@@ -216,8 +222,8 @@ async def create_expense_explicit(expense_data: ExpenseCreate, db: Session = Dep
 async def get_expenses_explicit(
     user_id: Optional[int] = Query(None, description="Filter by user ID"),
     category: Optional[str] = Query(None, description="Filter by category"),
-    start_date: Optional[date] = Query(None, description="Filter by start date"),
-    end_date: Optional[date] = Query(None, description="Filter by end date"),
+    start_date: Optional[str] = Query(None),
+    end_date: Optional[str] = Query(None),
     limit: int = Query(100, le=1000, description="Maximum number of expenses to return"),
     offset: int = Query(0, ge=0, description="Number of expenses to skip"),
     db: Session = Depends(get_db)
@@ -231,9 +237,15 @@ async def get_expenses_explicit(
     if category:
         query = query.filter(Expense.category.ilike(f"%{category}%"))
     if start_date:
-        query = query.filter(Expense.expense_date >= start_date)
+        try:
+            query = query.filter(Expense.expense_date >= start_date)
+        except Exception:
+            pass
     if end_date:
-        query = query.filter(Expense.expense_date <= end_date)
+        try:
+            query = query.filter(Expense.expense_date <= end_date)
+        except Exception:
+            pass
     expenses = query.order_by(Expense.expense_date.desc()).offset(offset).limit(limit).all()
     return expenses
 
@@ -253,8 +265,8 @@ async def get_expense_categories(db: Session = Depends(get_db)):
 async def get_user_expenses_legacy(
     user_id: int,
     category: Optional[str] = Query(None),
-    start_date: Optional[date] = Query(None),
-    end_date: Optional[date] = Query(None),
+    start_date: Optional[str] = Query(None),
+    end_date: Optional[str] = Query(None),
     limit: int = Query(100, le=1000),
     offset: int = Query(0, ge=0),
     db: Session = Depends(get_db)
@@ -264,8 +276,14 @@ async def get_user_expenses_legacy(
     if category:
         query = query.filter(Expense.category.ilike(f"%{category}%"))
     if start_date:
-        query = query.filter(Expense.expense_date >= start_date)
+        try:
+            query = query.filter(Expense.expense_date >= start_date)
+        except Exception:
+            pass
     if end_date:
-        query = query.filter(Expense.expense_date <= end_date)
+        try:
+            query = query.filter(Expense.expense_date <= end_date)
+        except Exception:
+            pass
     expenses = query.order_by(Expense.expense_date.desc()).offset(offset).limit(limit).all()
     return expenses 

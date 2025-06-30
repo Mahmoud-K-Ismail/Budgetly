@@ -25,6 +25,8 @@ class User(Base):
     
     # Relationship with expenses
     expenses = relationship("Expense", back_populates="user", cascade="all, delete-orphan")
+    # Relationship with planned purchases
+    planned_purchases = relationship("PlannedPurchase", back_populates="user", cascade="all, delete-orphan")
     
     def __repr__(self):
         return f"<User(id={self.id}, stipend={self.stipend}, savings_goal={self.savings_goal})>"
@@ -46,6 +48,29 @@ class Expense(Base):
     
     def __repr__(self):
         return f"<Expense(id={self.id}, amount={self.amount}, category={self.category})>"
+
+# ---------------------------------------------------------------------------
+# PlannedPurchase model
+# ---------------------------------------------------------------------------
+
+class PlannedPurchase(Base):
+    """Planned purchases that the user is considering making in the future."""
+    __tablename__ = "planned_purchases"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    item_name = Column(String(100), nullable=False, comment="Name of the planned purchase")
+    expected_price = Column(Float, nullable=False, comment="Expected cost")
+    priority = Column(String(10), nullable=False, comment="Priority level: high / medium / low")
+    desired_date = Column(Date, nullable=False, comment="Desired purchase date")
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationship with user
+    user = relationship("User", back_populates="planned_purchases")
+
+    def __repr__(self):
+        return f"<PlannedPurchase(id={self.id}, item_name={self.item_name}, expected_price={self.expected_price})>"
 
 # Database dependency
 def get_db():

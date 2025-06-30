@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
-import { Wallet, Plus, History, TrendingUp, LogOut } from 'lucide-react'
+import { Wallet, Plus, History, TrendingUp, LogOut, ListTodo } from 'lucide-react'
 
 const Navbar = () => {
   const { currentUser, logout } = useUser()
@@ -11,6 +11,7 @@ const Navbar = () => {
     { path: '/add-expense', label: 'Add Expense', icon: Plus },
     { path: '/history', label: 'History', icon: History },
     { path: '/insights', label: 'Insights', icon: TrendingUp },
+    { path: '/wishlist', label: 'Wishlist', icon: ListTodo },
   ]
 
   const isActive = (path) => location.pathname === path

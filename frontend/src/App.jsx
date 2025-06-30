@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard'
 import AddExpense from './pages/AddExpense'
 import HistoryPage from './pages/History.jsx'
 import Insights from './pages/Insights'
+import Wishlist from './pages/Wishlist'
 import { UserProvider } from './context/UserContext'
 import { Toaster } from 'react-hot-toast'
 
@@ -29,6 +30,7 @@ function App() {
             <Route path="/add-expense" element={<AddExpense />} />
             <Route path="/history" element={<HistoryPage />} />
             <Route path="/insights" element={<Insights />} />
+            <Route path="/wishlist" element={<Wishlist />} />
           </Routes>
         </main>
         <Toaster 

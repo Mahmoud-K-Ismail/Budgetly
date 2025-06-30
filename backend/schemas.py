@@ -85,4 +85,26 @@ class APIResponse(BaseModel):
 class ErrorResponse(BaseModel):
     success: bool = False
     error: str
-    details: Optional[str] = None 
+    details: Optional[str] = None
+
+# ---------------------------------------------------------------------------
+# Planned Purchase Schemas
+# ---------------------------------------------------------------------------
+
+class PlannedPurchaseBase(BaseModel):
+    item_name: str = Field(..., min_length=1, max_length=100, description="Item or purchase name")
+    expected_price: float = Field(..., ge=0, description="Expected cost of the purchase")
+    priority: str = Field(..., pattern="^(high|medium|low)$", description="Priority level (high/medium/low)")
+    desired_date: date = Field(..., description="Desired purchase date")
+
+class PlannedPurchaseCreate(PlannedPurchaseBase):
+    user_id: int = Field(..., description="User ID")
+
+class PlannedPurchase(PlannedPurchaseBase):
+    id: int
+    user_id: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True 

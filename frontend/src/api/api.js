@@ -62,4 +62,16 @@ export const summaryAPI = {
     }),
 }
 
+// Planned Purchase API
+export const plannedPurchaseAPI = {
+  add: (data) => api.post('/planned-purchases', data),
+  list: (userId) => api.get(`/planned-purchases/${userId}`),
+  delete: (purchaseId) => api.delete(`/planned-purchases/${purchaseId}`),
+}
+
+// Advice API
+export const adviceAPI = {
+  getAdvice: (userId) => api.get(`/advice/${userId}`),
+}
+
 export default api 

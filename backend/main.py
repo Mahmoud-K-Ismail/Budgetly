@@ -2,14 +2,15 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import uvicorn
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 import os
 
 from models import Base, engine
 from routes import users, expenses, summary
+from routes import planned_purchases, advice
 
-# Load environment variables
-load_dotenv()
+# Load environment variables (first look for .env in project root)
+load_dotenv(find_dotenv())
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -34,6 +35,8 @@ app.add_middleware(
 app.include_router(users.router, prefix="/api", tags=["users"])
 app.include_router(expenses.router, prefix="/api", tags=["expenses"])
 app.include_router(summary.router, prefix="/api", tags=["summary"])
+app.include_router(planned_purchases.router, prefix="/api", tags=["planned_purchases"])
+app.include_router(advice.router, prefix="/api", tags=["advice"])
 
 @app.get("/")
 async def root():
