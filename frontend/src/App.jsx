@@ -6,6 +6,7 @@ import AddExpense from './pages/AddExpense'
 import HistoryPage from './pages/History.jsx'
 import Insights from './pages/Insights'
 import Wishlist from './pages/Wishlist'
+import DealFinder from './pages/DealFinder'
 import { UserProvider } from './context/UserContext'
 import { Toaster } from 'react-hot-toast'
 
@@ -31,6 +32,7 @@ function App() {
             <Route path="/history" element={<HistoryPage />} />
             <Route path="/insights" element={<Insights />} />
             <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/deals/:id" element={<DealFinder />} />
           </Routes>
         </main>
         <Toaster 

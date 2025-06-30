@@ -107,4 +107,17 @@ class PlannedPurchase(PlannedPurchaseBase):
     updated_at: datetime
 
     class Config:
+        from_attributes = True
+
+# ---------------------------------------------------------------------------
+# Deal Suggestion Schema
+# ---------------------------------------------------------------------------
+
+class DealSuggestion(BaseModel):
+    merchant: str
+    item_name: str
+    price: float
+    url: str
+
+    class Config:
         from_attributes = True 

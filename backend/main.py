@@ -7,7 +7,7 @@ import os
 
 from models import Base, engine
 from routes import users, expenses, summary
-from routes import planned_purchases, advice
+from routes import planned_purchases, advice, deals
 
 # Load environment variables (first look for .env in project root)
 load_dotenv(find_dotenv())
@@ -37,6 +37,7 @@ app.include_router(expenses.router, prefix="/api", tags=["expenses"])
 app.include_router(summary.router, prefix="/api", tags=["summary"])
 app.include_router(planned_purchases.router, prefix="/api", tags=["planned_purchases"])
 app.include_router(advice.router, prefix="/api", tags=["advice"])
+app.include_router(deals.router, prefix="/api", tags=["deals"])
 
 @app.get("/")
 async def root():

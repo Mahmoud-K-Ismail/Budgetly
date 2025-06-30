@@ -74,4 +74,8 @@ export const adviceAPI = {
   getAdvice: (userId) => api.get(`/advice/${userId}`),
 }
 
+export const dealsAPI = {
+  getDeals: (purchaseId) => api.get(`/deals/${purchaseId}`),
+}
+
 export default api 

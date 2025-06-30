@@ -27,6 +27,7 @@ const PlannedPurchaseList = ({ purchases = [], onDelete }) => {
             <th className="px-4 py-2 text-center">Priority</th>
             <th className="px-4 py-2 text-center">Date</th>
             <th className="px-4 py-2"></th>
+            <th className="px-4 py-2 text-center">Deal</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
@@ -40,6 +41,9 @@ const PlannedPurchaseList = ({ purchases = [], onDelete }) => {
                 <button onClick={() => handleDelete(p.id)} className="text-danger-600 hover:text-danger-800">
                   <Trash2 className="w-4 h-4" />
                 </button>
+              </td>
+              <td className="px-4 py-2 text-center">
+                <a href={`/deals/${p.id}`} className="text-nyuad-600 hover:underline text-sm">Where to buy?</a>
               </td>
             </tr>
           ))}

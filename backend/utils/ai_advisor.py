@@ -6,6 +6,7 @@ import logging, traceback
 from typing import List, Dict, Any
 import json
 from datetime import date
+from hashlib import sha256
 
 from models import User, Expense, PlannedPurchase
 from utils.ai_client import gemini_chat
@@ -19,6 +20,15 @@ SYSTEM_PROMPT = (
     "next_purchases: array of objects {id:int, verdict:str, suggestion:str, score:int}.\n"
     "verdict must be one of: 'buy_now', 'postpone', 'cancel'. score is 0-100 where 100 = essential."
 )
+
+
+# ---------------------------------------------------------------------------
+# Simple in-memory cache to avoid excessive LLM calls. Resets on backend restart.
+# Key: (user_id, day_str, purchases_signature)
+# Value: advice dict
+# ---------------------------------------------------------------------------
+
+_ADVICE_CACHE: dict[tuple, Dict[str, Any]] = {}
 
 
 def _summarise_expenses(expenses: List[Expense]) -> List[Dict[str, Any]]:
@@ -57,6 +67,15 @@ def generate_advice(user: User, expenses: List[Expense], planned_purchases: List
         "savings_goal": user.savings_goal,
     }
 
+    # create cache key
+    today_str = date.today().isoformat()
+    sig_src = json.dumps(_serialise_purchases(planned_purchases), sort_keys=True)
+    purchases_sig = sha256(sig_src.encode()).hexdigest()
+    cache_key = (user.id, today_str, purchases_sig)
+
+    if cache_key in _ADVICE_CACHE:
+        return _ADVICE_CACHE[cache_key]
+
     payload = {
         "user": user_profile,
         "recent_expenses": _summarise_expenses(expenses),
@@ -88,6 +107,7 @@ def generate_advice(user: User, expenses: List[Expense], planned_purchases: List
             raise ValueError("Expected dict")
         data.setdefault("cuts", [])
         data.setdefault("next_purchases", [])
+        _ADVICE_CACHE[cache_key] = data
         return data
     except Exception as e:  # pragma: no cover – fallback when LLM fails
         logging.error("Gemini error:\n%s", traceback.format_exc())
