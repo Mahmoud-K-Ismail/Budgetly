@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Union
 from datetime import date, datetime
 
 # User Schemas
@@ -116,7 +116,7 @@ class PlannedPurchase(PlannedPurchaseBase):
 class DealSuggestion(BaseModel):
     merchant: str
     item_name: str
-    price: float
+    price: Union[float, str]  # Allow both float and string for cases like "Price varies"
     url: str
 
     class Config:

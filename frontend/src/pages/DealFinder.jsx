@@ -40,8 +40,13 @@ const DealFinder = () => {
           <li key={idx} className="p-4 border rounded-md space-y-1">
             <div className="flex items-center justify-between">
               <span className="font-medium text-gray-800">{d.merchant}</span>
-              {d.price > 0 && <span className="text-sm text-gray-600">${d.price.toLocaleString()}</span>}
+              {typeof d.price === 'number' && d.price > 0 ? (
+                <span className="text-sm text-gray-600">${d.price.toLocaleString()}</span>
+              ) : typeof d.price === 'string' ? (
+                <span className="text-sm text-gray-500 italic">{d.price}</span>
+              ) : null}
             </div>
+            <div className="text-sm text-gray-700">{d.item_name}</div>
             <a href={d.url} target="_blank" rel="noopener noreferrer" className="text-nyuad-600 hover:underline text-sm">
               View offer
             </a>
